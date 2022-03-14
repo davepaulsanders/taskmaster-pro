@@ -186,6 +186,19 @@ $(".card .list-group").sortable({
   scroll: false,
   tolerance: "pointer",
   helper: "clone",
+  activate: function (event) {
+    $(this).addClass("dropover");
+    $(".bottom-trash").addClass("bottom-trash-drag");
+  },
+  over: function (event) {
+    $(event.target).addClass("dropover-active");
+  },
+  out: function (event) {
+    $(event.target).removeClass("dropover-active");
+  },
+  deactivate: function (event) {
+    $(".bottom-trash").removeClass("bottom-trash-drag");
+  },
   update: function (event) {
     // array to store the task data in
     var tempArr = [];
@@ -215,8 +228,21 @@ $("#trash").droppable({
   tolerance: "touch",
   drop: function (event, ui) {
     ui.draggable.remove();
+    $(".bottom-trash").removeClass("bottom-trash-active");
+  },
+  over: function (event) {
+    $(".bottom-trash").addClass("bottom-trash-active");
+  },
+  out: function (event) {
+    $(".bottom-trash").removeClass("bottom-trash-active");
   },
 });
 $("#modalDueDate").datepicker({ minDate: 1 });
 // load tasks for the first time
+
+setInterval(function () {
+  $(".card .list-group-item").each(function (index, el) {
+    auditTask(el);
+  });
+}, 1800000);
 loadTasks();
